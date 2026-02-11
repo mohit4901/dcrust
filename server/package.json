@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "description": "PYQ Platform Backend",
   "type": "module",
   "main": "src/server.js",
   "scripts": {
@@ -10,12 +11,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "PYQ Platform Backend",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "mongoose": "^9.2.0"
+    "mongoose": "^9.2.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
