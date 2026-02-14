@@ -14,7 +14,7 @@ const paperSchema = new mongoose.Schema(
     created_at: String
   },
   {
-    collection: 'papers',   // 🔥 FORCE CORRECT COLLECTION
+    collection: 'papers',   //  FORCE CORRECT COLLECTION
     timestamps: false
   }
 );
