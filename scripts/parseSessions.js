@@ -20,7 +20,7 @@ const HEADERS = {
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/* ---------------- RETRY HELPER ---------------- */
+
 async function fetchWithRetry(client, url, retries = 3) {
   for (let i = 1; i <= retries; i++) {
     try {
@@ -33,7 +33,7 @@ async function fetchWithRetry(client, url, retries = 3) {
   }
 }
 
-/* ---------------- MAIN ---------------- */
+
 async function parseSessions() {
   console.log("🚀 REAL FINAL PARSER (COOKIE + RETRY)");
 
@@ -43,14 +43,14 @@ async function parseSessions() {
       jar,
       withCredentials: true,
       headers: HEADERS,
-      timeout: 60000 // ⬅️ IMPORTANT (60s)
+      timeout: 60000 //  IMPORTANT (60s)
     })
   );
 
   const allPapers = [];
   const seen = new Set();
 
-  /* -------- STEP 1: GET SESSIONS -------- */
+  
   const sessionRes = await client.get(`${BASE_URL}/dcrustpqp.php`);
   const $s = cheerio.load(sessionRes.data);
 
@@ -71,13 +71,13 @@ async function parseSessions() {
     });
   });
 
-  console.log(`✅ Sessions found: ${sessions.length}`);
+  console.log(` Sessions found: ${sessions.length}`);
 
-  /* -------- STEP 2: PER SESSION -------- */
+  
   for (const session of sessions) {
     console.log(`\n📚 ${session.text} | examid=${session.examid}`);
 
-    // 🔥 VERY IMPORTANT: set PHP session
+    
     await client.get(
       `${BASE_URL}/dcrustpqp2.php?examid=${session.examid}`
     );
@@ -119,23 +119,23 @@ async function parseSessions() {
           count++;
         });
 
-        if (count) console.log(`      ✅ ${count} papers`);
+        if (count) console.log(` ${count} papers`);
         await delay(200);
       } catch (err) {
-        console.log(`      ❌ skipped (timeout / server slow)`);
-        continue; // ⬅️ DO NOT CRASH
+        console.log(`skipped (timeout / server slow)`);
+        continue;
       }
     }
 
     await delay(600);
   }
 
-  /* -------- SAVE -------- */
+
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(allPapers, null, 2));
   console.log(`\n🎉 DONE! TOTAL PAPERS: ${allPapers.length}`);
 }
 
-/* ---------------- SESSION INFO ---------------- */
+
 function extractSessionInfo(text) {
   const lower = text.toLowerCase();
   const yearMatch = text.match(/20\d{2}/);
