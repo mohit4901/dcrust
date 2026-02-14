@@ -13,22 +13,22 @@ const INPUT_FILE = path.join(__dirname, 'papers_normalized.json');
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pyq_platform';
 
 async function importToDB() {
-  console.log('📦 Starting MongoDB import...');
+  console.log(' Starting MongoDB import...');
   
   if (!fs.existsSync(INPUT_FILE)) {
-    console.error('❌ papers_normalized.json not found. Run normalizeData.js first!');
+    console.error(' papers_normalized.json not found. Run normalizeData.js first!');
     process.exit(1);
   }
 
   // Read normalized data
   const papers = JSON.parse(fs.readFileSync(INPUT_FILE, 'utf8'));
-  console.log(`📥 Loaded ${papers.length} papers from file`);
+  console.log(` Loaded ${papers.length} papers from file`);
 
   const client = new MongoClient(MONGO_URI);
 
   try {
     await client.connect();
-    console.log('✅ Connected to MongoDB');
+    console.log(' Connected to MongoDB');
 
     const db = client.db();
     const collection = db.collection('papers');
@@ -44,7 +44,7 @@ async function importToDB() {
     await collection.createIndex({ year: 1 });
     await collection.createIndex({ session: 1 });
     await collection.createIndex({ subject_name: 'text', subject_code: 'text' });
-    console.log('✅ Created indexes');
+    console.log(' Created indexes');
 
     // Insert papers (handle duplicates)
     let inserted = 0;
@@ -69,14 +69,14 @@ async function importToDB() {
 
     // Show collection stats
     const count = await collection.countDocuments();
-    console.log(`   📊 Total papers in DB: ${count}`);
+    console.log(` Total papers in DB: ${count}`);
 
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error(' Error:', error);
     throw error;
   } finally {
     await client.close();
-    console.log('🔌 Disconnected from MongoDB');
+    console.log('Disconnected from MongoDB');
   }
 }
 
