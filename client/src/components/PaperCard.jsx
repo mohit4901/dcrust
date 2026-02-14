@@ -1,34 +1,53 @@
 function PaperCard({ paper }) {
   const handleClick = () => {
-    window.open(paper.pdf_url, '_blank');
+    window.open(paper.pdf_url, "_blank");
   };
 
   return (
-    <div 
+    <div
       onClick={handleClick}
-      className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-lg transition-all cursor-pointer hover:-translate-y-1 border border-gray-100"
+      className="group bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:-translate-y-1"
     >
-      <div className="mb-2 sm:mb-3">
-        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 mb-1.5 sm:mb-2 leading-snug line-clamp-2">
+     
+      <div className="mb-3 sm:mb-4">
+        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors">
           {paper.subject_name}
         </h3>
-        <span className="inline-block bg-blue-100 text-blue-800 px-2 py-0.5 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm font-semibold">
+
+        <span className="inline-block mt-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-xs sm:text-sm font-semibold tracking-wide">
           {paper.subject_code}
         </span>
       </div>
-      
-      <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
-        <div className="bg-gray-100 text-gray-700 px-2 py-0.5 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm font-medium">
+
+     
+      <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
+       
+        <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-xs sm:text-sm font-medium">
           {paper.branch}
-        </div>
-        <div className="bg-gray-100 text-gray-700 px-2 py-0.5 sm:px-3 sm:py-1 rounded-md text-xs sm:text-sm font-medium">
+        </span>
+
+        
+        {paper.semester && (
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-md text-xs sm:text-sm font-semibold">
+            Sem {paper.semester}
+          </span>
+        )}
+
+        
+        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs sm:text-sm font-medium">
           {paper.session} {paper.year}
-        </div>
+        </span>
       </div>
 
-      <div className="pt-2 sm:pt-3 border-t border-gray-200">
-        <span className="text-primary-600 font-medium text-xs sm:text-sm hover:underline">
-          View PDF →
+   
+      <div className="pt-3 border-t border-gray-200 flex items-center justify-between">
+        <span className="text-primary-600 font-semibold text-xs sm:text-sm">
+          View PDF
+        </span>
+
+      
+        <span className="text-primary-600 text-sm transform transition-transform duration-300 group-hover:translate-x-1">
+          →
         </span>
       </div>
     </div>
