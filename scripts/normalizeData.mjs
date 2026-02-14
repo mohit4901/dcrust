@@ -3,7 +3,7 @@ import { createCanvas } from "@napi-rs/canvas";
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import Tesseract from "tesseract.js";
 
-/* ================= CONFIG ================= */
+
 const INPUT = "./papers.json";
 const OUTPUT = "./papers_normalized.jsonl";
 const CHECKPOINT = "./checkpoint.txt";
@@ -11,7 +11,7 @@ const CHECKPOINT = "./checkpoint.txt";
 const BATCH_SIZE = 4;      // accuracy > speed
 const OCR_DELAY = 300;
 
-/* ================= BRANCH RULES ================= */
+
 const BRANCH_RULES = {
   AER: "AERONAUTICAL ENGINEERING",
   AE: "AUTOMOBILE ENGINEERING",
@@ -38,10 +38,10 @@ function detectBranchFromCode(code = "") {
   return "GENERAL";
 }
 
-/* ================= OCR WORKER (v5 SAFE) ================= */
+
 const worker = await Tesseract.createWorker("eng");
 
-/* ================= OCR CORE ================= */
+
 async function extractTextFromPDF(url) {
   try {
     const res = await fetch(url, {
@@ -73,7 +73,7 @@ async function extractTextFromPDF(url) {
   }
 }
 
-/* ================= TEXT CLEANING ================= */
+
 function cleanText(text = "") {
   return text
     .replace(/\n+/g, " ")
@@ -82,7 +82,7 @@ function cleanText(text = "") {
     .toLowerCase();
 }
 
-/* ================= SEMESTER (HIGH ACCURACY) ================= */
+
 const SEM_MAP = {
   first: 1, i: 1,
   second: 2, ii: 2,
@@ -102,7 +102,7 @@ function detectSemester(text) {
   return m ? SEM_MAP[m[1]] : null;
 }
 
-/* ================= DEGREE ================= */
+
 function detectDegree(text) {
   const t = cleanText(text);
   if (/\bb\.?\s*tech\b/.test(t)) return "B.Tech";
@@ -112,7 +112,7 @@ function detectDegree(text) {
   return null;
 }
 
-/* ================= SCHEME (STRICT) ================= */
+
 function detectScheme(text) {
   const t = cleanText(text);
   if (/\bc\s*scheme\b/.test(t)) return "C";
@@ -121,14 +121,14 @@ function detectScheme(text) {
   return null;
 }
 
-/* ================= MAIN ================= */
+
 async function normalize() {
   const raw = JSON.parse(fs.readFileSync(INPUT, "utf8"));
   let startIndex = fs.existsSync(CHECKPOINT)
     ? Number(fs.readFileSync(CHECKPOINT))
     : 0;
 
-  console.log(`🚀 STARTING OCR FROM ${startIndex}/${raw.length}`);
+  console.log(` STARTING OCR FROM ${startIndex}/${raw.length}`);
 
   for (let i = startIndex; i < raw.length; i += BATCH_SIZE) {
     const batch = raw.slice(i, i + BATCH_SIZE);
@@ -138,7 +138,7 @@ async function normalize() {
       const p = batch[j];
       const start = Date.now();
 
-      console.log(`📄 ${idx + 1}/${raw.length} → ${p.subject_code}`);
+      console.log(` ${idx + 1}/${raw.length} → ${p.subject_code}`);
 
       const text = await extractTextFromPDF(p.pdf_url);
 
@@ -160,14 +160,14 @@ async function normalize() {
       fs.writeFileSync(CHECKPOINT, String(idx + 1));
 
       console.log(
-        `🎓 ${record.semester ?? "?"} | 🏫 ${record.degree ?? "?"} | 📘 ${record.scheme ?? "?"} | ⏱ ${(Date.now() - start) / 1000}s`
+        ` ${record.semester ?? "?"} | 🏫 ${record.degree ?? "?"} | 📘 ${record.scheme ?? "?"} | ⏱ ${(Date.now() - start) / 1000}s`
       );
 
       await new Promise(r => setTimeout(r, OCR_DELAY));
     }
 
     global.gc && global.gc();
-    console.log(`🧹 Batch ${(i / BATCH_SIZE) + 1} complete`);
+    console.log(`Batch ${(i / BATCH_SIZE) + 1} complete`);
   }
 
   await worker.terminate();
