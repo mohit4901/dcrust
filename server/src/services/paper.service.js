@@ -3,7 +3,7 @@ import Paper from '../models/Paper.model.js';
 export const getPapers = async (filters = {}, page = 1, limit = 50) => {
   const query = {};
 
-  // 🔍 Text search
+  //  Text search
   if (filters.search && filters.search.trim() !== '') {
     query.$or = [
       { subject_name: { $regex: filters.search, $options: 'i' } },
@@ -11,22 +11,22 @@ export const getPapers = async (filters = {}, page = 1, limit = 50) => {
     ];
   }
 
-  // 🏫 Branch
+  // Branch
   if (filters.branch && filters.branch !== 'ALL') {
     query.branch = filters.branch.toUpperCase();
   }
 
-  // 📘 Semester
+  // Semester
   if (Number.isInteger(filters.semester)) {
     query.semester = filters.semester;
   }
 
-  // 📅 Year
+  // Year
   if (Number.isInteger(filters.year)) {
     query.year = filters.year;
   }
 
-  // 🗓 Session
+  // Session
   if (filters.session && filters.session !== 'ALL') {
     query.session = filters.session;
   }
