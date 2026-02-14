@@ -65,6 +65,17 @@ function FilterBar({ filters, onFilterChange }) {
         </select>
 
         <select
+  value={filters.semester}
+  onChange={(e) => handleChange('semester', e.target.value)}
+  className="w-full px-3 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-200 rounded-lg bg-white cursor-pointer hover:border-gray-300 focus:border-primary-600 focus:ring-4 focus:ring-primary-100 outline-none transition-all"
+>
+  <option value="">All Semesters</option>
+  {availableFilters.semesters.map(sem => (
+    <option key={sem} value={sem}>{sem}</option>
+  ))}
+</select>
+        
+        <select
           value={filters.session}
           onChange={(e) => handleChange('session', e.target.value)}
           className="w-full px-3 py-2 sm:py-2.5 text-sm sm:text-base border-2 border-gray-200 rounded-lg bg-white cursor-pointer hover:border-gray-300 focus:border-primary-600 focus:ring-4 focus:ring-primary-100 outline-none transition-all"
